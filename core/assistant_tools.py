@@ -1,28 +1,44 @@
 import re
 from decimal import Decimal
 from django.db.models import Q
+from thefuzz import fuzz
 from .models import Product, Dealer, Order, OrderItem
 from .views import generate_order_number, calculate_order_totals
 
 def tool_search_parts(query=None, vehicle=None, category=None):
     """
-    Search product catalogue for matching parts.
+    Search product catalogue for matching parts using database indexing
+    combined with fuzzy matching scoring for robust product retrieval.
     """
     qs = Product.objects.all()
-    if query:
-        qs = qs.filter(
-            Q(sku__icontains=query) |
-            Q(name__icontains=query) |
-            Q(brand__icontains=query) |
-            Q(description__icontains=query)
-        )
     if vehicle:
         qs = qs.filter(vehicle_fitment__icontains=vehicle)
     if category:
         qs = qs.filter(category__icontains=category)
 
+    items = list(qs)
+    
+    # If a query is provided, score items with fuzzy matching across sku, name, brand
+    if query:
+        q_clean = query.lower()
+        scored_items = []
+        for p in items:
+            score = max(
+                fuzz.token_set_ratio(q_clean, p.sku.lower()),
+                fuzz.token_set_ratio(q_clean, p.name.lower()),
+                fuzz.token_set_ratio(q_clean, p.brand.lower()),
+                fuzz.partial_ratio(q_clean, p.vehicle_fitment.lower())
+            )
+            # direct substring match bonus
+            if q_clean in p.name.lower() or q_clean in p.sku.lower() or q_clean in p.brand.lower():
+                score += 50
+            if score >= 40:
+                scored_items.append((score, p))
+        scored_items.sort(key=lambda x: x[0], reverse=True)
+        items = [p for _, p in scored_items]
+
     results = []
-    for p in qs[:10]:
+    for p in items[:10]:
         results.append({
             "sku": p.sku,
             "name": p.name,
