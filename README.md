@@ -137,3 +137,11 @@ This automatically runs database migrations, executes idempotent data seeding tw
 5. **Minute 5: Automated Smoke Test Verification**
    - Run `python smoke_test.py --base-url http://localhost:8000 --all`.
    - Show all checks passing (12/12).
+
+---
+
+## 8. Video Walkthrough Link
+
+- **Demo Video URL**: [Watch the 5-Minute Code Walkthrough Video](YOUR_VIDEO_LINK_HERE)
+  *(Please ensure the Google Drive / Loom / YouTube link permissions are set to "Anyone with the link can view")*
+
