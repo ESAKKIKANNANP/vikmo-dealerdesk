@@ -142,6 +142,5 @@ This automatically runs database migrations, executes idempotent data seeding tw
 
 ## 8. Video Walkthrough Link
 
-- **Demo Video URL**: [Watch the 5-Minute Code Walkthrough Video](YOUR_VIDEO_LINK_HERE)
-  *(Please ensure the Google Drive / Loom / YouTube link permissions are set to "Anyone with the link can view")*
-
+- **Demo Video URL**: [Watch the 5-Minute Code Walkthrough Video](https://drive.google.com/file/d/1Tmn94E5N9ihM1xvoTNKIUD-8Sp47kSin/view?usp=drive_link)
+ 
